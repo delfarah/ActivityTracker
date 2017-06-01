@@ -10,3 +10,7 @@ The plan
 
 The process will work in the background forever. It writes the logs in file.
 A separate program will be used to display the results.
+
+
+Notes:
+cat /proc/$(xdotool getwindowpid $(xdotool getwindowfocus))/comm can do the job
