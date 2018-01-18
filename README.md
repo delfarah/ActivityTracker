@@ -1,5 +1,5 @@
 # ActivityTracker
-A simple program in C++ that can monitor your activity
+A simple program in Python that can monitor your activity
 
 
 The plan
