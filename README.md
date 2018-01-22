@@ -15,6 +15,5 @@ Usage:
 
 
 The plan:
-It only counts the seconds and reports accordingly, not very realistic - can improve
 Not yet sensitive to program title (Name of Chrome page title can be useful)
 More extensive reports
