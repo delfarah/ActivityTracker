@@ -1,11 +1,7 @@
 import numpy as np
 import sys
 import math
-<<<<<<< HEAD
 import matplotlib.pyplot as plt
-
-=======
->>>>>>> b2caf0d5711e7b75729fca57193b2bb8dbc3f3b1
 
 IDLE_THRESHOLD = 60
 MINUS_INFINITY = -10000000
@@ -75,7 +71,6 @@ m, s = divmod(total_up, 60)
 h, m = divmod(m, 60)
 print "total up time: %02d:%02d:%02d" % (h, m, s)
 
-<<<<<<< HEAD
 
 
 y_pos = np.arange(len(objects))
@@ -86,5 +81,3 @@ plt.title('Report for: ' + the_date)
 plt.ylabel('Usage (seconds)')
 
 plt.show()
-=======
->>>>>>> b2caf0d5711e7b75729fca57193b2bb8dbc3f3b1
