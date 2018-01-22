@@ -1,6 +1,11 @@
 import numpy as np
 import sys
 import math
+<<<<<<< HEAD
+import matplotlib.pyplot as plt
+
+=======
+>>>>>>> b2caf0d5711e7b75729fca57193b2bb8dbc3f3b1
 
 IDLE_THRESHOLD = 60
 MINUS_INFINITY = -10000000
@@ -49,6 +54,8 @@ for v in mymap.iteritems():
         mymap2[v[1]] = 1
         
         
+objects = list()
+performance = list()
 print("report for the date: " + the_date) 
 total_seconds = 0
 for key, value in sorted(mymap2.iteritems(), key=lambda (k,v): (v,k), reverse=True):
@@ -56,8 +63,11 @@ for key, value in sorted(mymap2.iteritems(), key=lambda (k,v): (v,k), reverse=Tr
     m, s = divmod(value, 60)
     h, m = divmod(m, 60)
     print "%s: %02d:%02d:%02d" % (key, h, m, s)
+    if value > 60:
+        objects.append(key)
+        performance.append(value)
 
-m, s = divmod(total_seconds, 60)
+m, s = divmod(total_seconds, 60) #only show apps that were used more than 1 minute
 h, m = divmod(m, 60)
 print "total of: %02d:%02d:%02d" % (h, m, s)
 
@@ -65,3 +75,16 @@ m, s = divmod(total_up, 60)
 h, m = divmod(m, 60)
 print "total up time: %02d:%02d:%02d" % (h, m, s)
 
+<<<<<<< HEAD
+
+
+y_pos = np.arange(len(objects))
+plt.bar(y_pos, performance, align='center', alpha=0.5)
+
+plt.xticks(y_pos, objects, rotation=45)
+plt.title('Report for: ' + the_date)
+plt.ylabel('Usage (seconds)')
+
+plt.show()
+=======
+>>>>>>> b2caf0d5711e7b75729fca57193b2bb8dbc3f3b1

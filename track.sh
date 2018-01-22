@@ -5,7 +5,6 @@ export DISPLAY=:0.0
 cd $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 xinput test-xi2 --root > tmp.log &
 
-activity_DATE=`date +%Y-%m-%d`
 old_count=0
 the_limit=1000
 
@@ -17,6 +16,7 @@ do
      if [ "$new_count" != "$old_count" ]; then
         the_app=`cat /proc/$(xdotool getwindowpid $(xdotool getwindowfocus))/comm`
         the_date=`date '+%Y-%m-%d %H:%M:%S'`
+        activity_DATE=`date +%Y-%m-%d`
         win_title=`wmctrl -lp | grep $(xprop -root | grep _NET_ACTIVE_WINDOW | head -1 | awk '{print $5}' | sed 's/,//' | sed 's/^0x/0x0/')`
         str=$the_date' '$the_app' '$win_title
         echo $str >> $activity_DATE.log
