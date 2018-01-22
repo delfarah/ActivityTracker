@@ -1,31 +1,20 @@
 # ActivityTracker
-A simple program that can monitor your activity
+A simple program that can monitor your activity that I plan to extend over time.
+It is tested on Ubuntu 17.10 on Xorg
 
 
-The plan
+Usage:
 
-1. get the window which the focus is on right now.
-2. Get mouse and keyboard events if it changes the active window you may need to reset/set the timers.
-3. if keyboard and mouse both go idle. Then stop tracking until you recieve an event
+1. To start tracking:
+  run track.sh or add it to startup and it will run automatically on every reboot
 
-The process will work in the background forever. It writes the logs in file.
-A separate program will be used to display the results.
+2. To see the report:
+  python2.7 report.py THE_DATE #e.g. 2018-01-21
 
 
-Notes:
-cat /proc/$(xdotool getwindowpid $(xdotool getwindowfocus))/comm can do the job
 
-for keyboard: https://www.tecmint.com/how-to-monitor-keyboard-keystrokes-using-logkeys-in-linux/
-for mouse: xdotool can handle this.
-Keyboard gives a log file which works well
-for mouse I check pointer position every 200ms and if see a change then I am active
 
-Combine these two logs to initiate the report
-
-Apps to handle for now:
-nautalius
-gnome-terminal
-terminator
-chrome (+title of window)
-desktop
-
+The plan:
+It only counts the seconds and reports accordingly, not very realistic - can improve
+Not yet sensitive to program title (Name of Chrome page title can be useful)
+More extensive reports
