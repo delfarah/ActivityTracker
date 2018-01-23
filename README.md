@@ -2,6 +2,9 @@
 A simple program that can monitor your activity that I plan to extend over time.
 It is tested on Ubuntu 17.10 on Xorg
 
+Prerequisite:
+xinput, wmctrl, xdotool
+
 
 Usage:
 
