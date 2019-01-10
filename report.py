@@ -41,7 +41,7 @@ with open(input_file) as fp:
         prev_line2 = line[2]
         
         mymap[timestamp] = line[2]
-total_up = timestamp - timestep_start
+total_office = timestamp - timestep_start
         
 for v in mymap.iteritems():
     if v[1] in mymap2:
@@ -53,9 +53,9 @@ for v in mymap.iteritems():
 objects = list()
 performance = list()
 print("report for the date: " + the_date) 
-total_seconds = 0
+total_desk = 0
 for key, value in sorted(mymap2.iteritems(), key=lambda (k,v): (v,k), reverse=True):
-    total_seconds = total_seconds + value 
+    total_desk = total_desk + value 
     m, s = divmod(value, 60)
     h, m = divmod(m, 60)
     print "%s: %02d:%02d:%02d" % (key, h, m, s)
@@ -63,13 +63,28 @@ for key, value in sorted(mymap2.iteritems(), key=lambda (k,v): (v,k), reverse=Tr
         objects.append(key)
         performance.append(value)
 
-m, s = divmod(total_seconds, 60) #only show apps that were used more than 1 minute
-h, m = divmod(m, 60)
-print "total of: %02d:%02d:%02d" % (h, m, s)
+print "------------------------"
+print "Brief report:"
 
-m, s = divmod(total_up, 60)
+m, s = divmod(total_office, 60)
 h, m = divmod(m, 60)
-print "total up time: %02d:%02d:%02d" % (h, m, s)
+print "total time have been in office: %02d:%02d:%02d" % (h, m, s)
+
+
+m, s = divmod(total_desk, 60) #only show apps that were used more than 1 minute
+h, m = divmod(m, 60)
+print "total time have been on desk: %02d:%02d:%02d" % (h, m, s)
+
+
+
+total_productive_time = total_desk-performance[objects.index('chrome')]-performance[objects.index('Telegram')]
+m, s = divmod(total_productive_time, 60)
+h, m = divmod(m, 60)
+print "total time without distraction: %02d:%02d:%02d" % (h, m, s)
+
+
+print "Office time efficiency: %% %.2f" % (100.*float(total_productive_time)/float(total_office))
+print "Desk time efficiency: %% %.2f" % (100.*float(total_productive_time)/float(total_desk))
 
 
 
@@ -81,3 +96,6 @@ plt.title('Report for: ' + the_date)
 plt.ylabel('Usage (seconds)')
 
 plt.show()
+
+
+
