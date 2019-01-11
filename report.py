@@ -2,6 +2,7 @@ import numpy as np
 import sys
 import math
 import matplotlib.pyplot as plt
+from colorama import Fore, Back, Style
 
 IDLE_THRESHOLD = 60
 MINUS_INFINITY = -10000000
@@ -77,14 +78,20 @@ print "total time have been on desk: %02d:%02d:%02d" % (h, m, s)
 
 
 
-total_productive_time = total_desk-performance[objects.index('chrome')]-performance[objects.index('Telegram')]
+#total_productive_time = total_desk-performance[objects.index('chrome')]-performance[objects.index('Telegram')]
+total_productive_time = total_desk
+for activity in ('chrome' , 'Telegram'):
+	if activity in objects:
+		total_productive_time = total_productive_time - performance[objects.index(activity)]
+
 m, s = divmod(total_productive_time, 60)
 h, m = divmod(m, 60)
 print "total time without distraction: %02d:%02d:%02d" % (h, m, s)
 
 
-print "Office time efficiency: %% %.2f" % (100.*float(total_productive_time)/float(total_office))
-print "Desk time efficiency: %% %.2f" % (100.*float(total_productive_time)/float(total_desk))
+print "Office time efficiency: " + Fore.GREEN + " %% %.2f" % (100.*float(total_productive_time)/float(total_office)) + Fore.RESET
+print "Desk time efficiency:"    + Fore.GREEN + " %% %.2f" % (100.*float(total_productive_time)/float(total_desk)) + Fore.RESET
+
 
 
 
