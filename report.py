@@ -86,11 +86,16 @@ for activity in ('chrome' , 'Telegram'):
 
 m, s = divmod(total_productive_time, 60)
 h, m = divmod(m, 60)
-print "total time without distraction: %02d:%02d:%02d" % (h, m, s)
+
+m2, s2 = divmod(total_desk-total_productive_time, 60)
+h2, m2 = divmod(m2, 60)
+
+print Fore.GREEN+"total efficient time: %02d:%02d:%02d" % (h, m, s)
+print Fore.RED + "Total distraction time: %02d:%02d:%02d" % (h2, m2, s2) + Fore.RESET
 
 
-print "Office time efficiency: " + Fore.GREEN + " %% %.2f" % (100.*float(total_productive_time)/float(total_office)) + Fore.RESET
-print "Desk time efficiency:"    + Fore.GREEN + " %% %.2f" % (100.*float(total_productive_time)/float(total_desk)) + Fore.RESET
+print "Office time efficiency: " + Fore.BLUE + " %% %.2f" % (100.*float(total_productive_time)/float(total_office)) + Fore.RESET
+print "Desk time efficiency:"    + Fore.BLUE + " %% %.2f" % (100.*float(total_productive_time)/float(total_desk)) + Fore.RESET
 
 
 
