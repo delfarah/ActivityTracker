@@ -2,12 +2,14 @@ import numpy as np
 import sys
 import math
 import matplotlib.pyplot as plt
+import matplotlib
 from colorama import Fore
 from datetime import datetime
 from datetime import timedelta
 import os
 import pickle
 import getpass
+import pylab
 
 IDLE_THRESHOLD = 60 #in seconds
 MINUS_INFINITY = -10000000
@@ -104,8 +106,63 @@ while current_date < datetime.today() + timedelta(days=-1):
 with open(days_report_file_name, 'wb') as handle:
     pickle.dump(date_to_times, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-os.system("scp " + days_report_file_name + " delfarah@pnl20.cse.ohio-state.edu:/home/delfarah/tracker")
-os.system("scp " + " delfarah@pnl20.cse.ohio-state.edu:/home/delfarah/tracker/* .")
+os.system("scp " + days_report_file_name + " osu8420@owens.osc.edu:/users/PAS0774/osu8420/tracker")
+os.system("scp " + " osu8420@owens.osc.edu:/users/PAS0774/osu8420/tracker/* .")
 
 
-#load mgn and mighty pickles, add all the numbers one by one, then show results!
+
+with open('mighty.pickle', 'rb') as handle:
+    date_to_times1 = pickle.load(handle)   # date -> [productive, total desk]
+with open('delfarah.1.pickle', 'rb') as handle:
+    date_to_times2 = pickle.load(handle)   # date -> [productive, total desk]
+
+date_to_times = {}
+
+for v in date_to_times1.iteritems():
+    date_to_times[v[0]] =  [sum(x) for x in zip(date_to_times1[v[0]], date_to_times2[v[0]])]
+
+
+
+#Print from 2019-01-01 to today
+worked_time = list()
+all_desk_time = list()
+titles = list()
+current_date = datetime(2019, 1, 1) #track from 2018 to today
+
+while current_date < datetime.today():
+    current_date_string = current_date.strftime('%Y-%m-%d')
+
+    if current_date_string in date_to_times:
+        print( current_date_string + ' ' + str(date_to_times[current_date_string]))
+
+    all_desk_time += (date_to_times[current_date_string][1]/3600.,)
+    worked_time += (date_to_times[current_date_string][0]/3600.,)
+    titles += (current_date_string,)
+
+
+    current_date += timedelta(days=1)
+
+
+
+font = {'size' : 7}
+matplotlib.rc('font', **font)
+
+ind = np.arange(len(worked_time))    # the x locations for the groups
+width = 0.35       # the width of the bars: can also be len(x) sequence
+
+p1 = plt.bar(ind, all_desk_time, width, color='tomato')
+p2 = plt.bar(ind, worked_time, width, color='limegreen')
+
+plt.ylabel('Hours')
+plt.xticks(ind, titles)
+plt.xticks(rotation=90)
+plt.yticks(np.arange(0, 17, 1))
+plt.legend((p1[0], p2[0]), ('Distraction', 'Productive'))
+
+
+for i in range(len(worked_time)):
+    height = p1[i].get_height()
+    plt.text(p1[i].get_x() + p1[i].get_width()/2., 1.1*height, '%%%.1f' % float(100 *p2[i].get_height() / p1[i].get_height()) , ha='center', va='bottom', rotation=90,)
+
+plt.subplots_adjust(top=0.9, bottom=0.2)
+pylab.savefig('report.png')
