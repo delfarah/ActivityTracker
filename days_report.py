@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import numpy as np
 import sys
 import math
@@ -10,9 +12,27 @@ import os
 import pickle
 import getpass
 import pylab
+import calendar
 
 IDLE_THRESHOLD = 60 #in seconds
 MINUS_INFINITY = -10000000
+
+checked_listory_file = 'checked_history.pickle'
+if not os.path.isfile(checked_listory_file):
+    last_checked = {}
+    last_checked[datetime.today().strftime('%Y-%m-%d')] = 0
+    with open(checked_listory_file, 'wb') as handle:
+        pickle.dump(last_checked, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open(checked_listory_file, 'rb') as handle:
+    last_checked = pickle.load(handle)   # date -> [productive, total desk]
+last_checked[datetime.today().strftime('%Y-%m-%d')] += 1
+with open(checked_listory_file, 'wb') as handle:
+    pickle.dump(last_checked, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+if last_checked[datetime.today().strftime('%Y-%m-%d')] > 2:
+    print('Already exceeded maximum allowd times to check the tracker')
+    exit(0)
 
 
 current_date = datetime(2018, 1, 1) #track from 2018 to today
@@ -127,42 +147,57 @@ for v in date_to_times1.iteritems():
 worked_time = list()
 all_desk_time = list()
 titles = list()
-current_date = datetime(2019, 1, 1) #track from 2018 to today
+start_date = datetime(2019, 1, 1) #track from 2018 to today
+#end_date = datetime(2018, 12, 30)
+end_date = datetime.today()
 
-while current_date < datetime.today():
+current_date = start_date
+while current_date < end_date:
     current_date_string = current_date.strftime('%Y-%m-%d')
+    current_date_string_weekday = calendar.day_name[current_date.weekday()] 
 
-    if current_date_string in date_to_times:
-        print( current_date_string + ' ' + str(date_to_times[current_date_string]))
+#    if current_date_string in date_to_times:
+#        print( current_date_string + ' ' + str(date_to_times[current_date_string]))
 
     all_desk_time += (date_to_times[current_date_string][1]/3600.,)
     worked_time += (date_to_times[current_date_string][0]/3600.,)
-    titles += (current_date_string,)
+    titles += (current_date_string[5:]+' '+current_date_string_weekday,)
 
 
     current_date += timedelta(days=1)
 
+from matplotlib.pyplot import figure
+figure(figsize=(len(worked_time)/2, 6))
 
 
-font = {'size' : 7}
+font = {'size' : 9}
 matplotlib.rc('font', **font)
 
 ind = np.arange(len(worked_time))    # the x locations for the groups
-width = 0.35       # the width of the bars: can also be len(x) sequence
+width = 0.80       # the width of the bars: can also be len(x) sequence
 
-p1 = plt.bar(ind, all_desk_time, width, color='tomato')
-p2 = plt.bar(ind, worked_time, width, color='limegreen')
+plt.grid(color='black', linestyle='dotted', linewidth=0.5, axis='y', zorder=0)
+
+p1 = plt.bar(ind, all_desk_time, width, color='tomato', zorder=3)
+p2 = plt.bar(ind, worked_time, width, color='limegreen', zorder=3)
 
 plt.ylabel('Hours')
 plt.xticks(ind, titles)
 plt.xticks(rotation=90)
-plt.yticks(np.arange(0, 17, 1))
+plt.yticks(np.arange(0, 12, 1))
 plt.legend((p1[0], p2[0]), ('Distraction', 'Productive'))
 
 
 for i in range(len(worked_time)):
     height = p1[i].get_height()
-    plt.text(p1[i].get_x() + p1[i].get_width()/2., 1.1*height, '%%%.1f' % float(100 *p2[i].get_height() / p1[i].get_height()) , ha='center', va='bottom', rotation=90,)
+    if p1[i].get_height() == 0:
+    	percent_value = 0
+    else: 
+    	percent_value = float(100 *p2[i].get_height() / p1[i].get_height())
+    plt.text(p1[i].get_x() + p1[i].get_width()/2., 1.05*height, '%%%.1f' % percent_value , ha='center', va='bottom', rotation=90,)
 
-plt.subplots_adjust(top=0.9, bottom=0.2)
-pylab.savefig('report.png')
+plt.subplots_adjust(top=0.9, bottom=0.3)
+pylab.savefig('report.pdf')
+
+
+os.system('gnome-open report.pdf')
