@@ -1,0 +1,8 @@
+#! /bin/bash
+
+source ~/.bashrc
+~/mount_all
+cd /home/mighty/Desktop/ActivityTracker
+cp /mnt/home/tracker/* .
+python days_report.py
+cp delfarah.1.pickle  /mnt/home/tracker
